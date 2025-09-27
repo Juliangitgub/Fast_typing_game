@@ -111,6 +111,10 @@ public class GameController {
     }
 
     private void startTimer() {
+        if (timeline != null) {
+            timeline.stop(); // Detener timeline anterior
+        }
+
         timeLeft = getLevelTime(level);
         timeLabel.setText("Time: " + timeLeft);
 
@@ -118,10 +122,9 @@ public class GameController {
             timeLeft--;
             timeLabel.setText("Time: " + timeLeft);
 
-            if (timeLeft <= 0 ) {
+            if (timeLeft <= 0) {
                 timeline.stop();
                 inputWordTextField.setEditable(false);
-                checkWord();
                 writeWordLabel.setText("⏱ THE TIME IS OVER!");
             }
         }));
@@ -145,9 +148,9 @@ public class GameController {
             level++;
             hitsLabel.setText("Hits: " + level);
             inputWordTextField.clear();
-            startTimer();
             nextWord();
-        }else{
+            startTimer();
+        } else {
             alertsLabel.setStyle("-fx-text-fill: red;");
             alertsLabel.setText("WRONG WORD");
         }
