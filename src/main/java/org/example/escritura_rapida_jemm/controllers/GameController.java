@@ -146,7 +146,7 @@ public class GameController {
         String typed = inputWordTextField.getText().trim();
         if (typed.equals(writeWordLabel.getText()) && timeLeft >= 0) {
             level++;
-            hitsLabel.setText("Hits: " + level);
+            hitsLabel.setText("level: " + level);
             inputWordTextField.clear();
             alertsLabel.setStyle("-fx-text-fill: green;");
             alertsLabel.setText("NEXT LEVEL");
