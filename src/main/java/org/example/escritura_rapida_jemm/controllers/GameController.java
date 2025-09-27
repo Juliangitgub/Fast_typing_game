@@ -23,6 +23,8 @@ public class GameController {
 
     @FXML
     private Label writeWordLabel;
+    @FXML
+    private Label alertsLabel;
 
     @FXML
     private Label nicknameLabel;
@@ -34,15 +36,52 @@ public class GameController {
     private Button startGameButton;
     @FXML
     private Label timeLabel;
+    private List<String> words = Arrays.asList(
+            "event",
+            "eventHandler",
+            "eventListener",
+            "trigger",
+            "callback",
+            "signal",
+            "slot",
+            "clickEvent",
+            "mouseEvent",
+            "keyboardEvent",
+            "touchEvent",
+            "timerEvent",
+            "systemEvent",
+            "onClick",
+            "onHover",
+            "onKeyPress",
+            "onLoad",
+            "emit",
+            "dispatch",
+            "subscribe",
+            "publish",
+            "eventLoop",
+            "observerPattern",
+            "publisherSubscriber",
+            "eventQueue",
+            "asynchronous",
+            "nonBlocking",
+            "listenerRegistration",
+            "addEventListener",
+            "removeEventListener",
+            "handleEvent",
+            "preventDefault",
+            "stopPropagation",
+            "eventDriven",
+            "reactive",
+            "callbackBased"
+    );
 
-    private String nickname;
-    private List<String> words = Arrays.asList("java", "codigo", "rapido", "pantalla", "teclado", "programa");
     private Random random = new Random();
-    private int hits = 0;
-    private int timeLeft = 10;
+    private int level = 1;
+    private int timeLeft = 20;
     private Timeline timeline;
     @FXML
     public void initialize() {
+
         startGameButton.setText("Start");
         inputWordTextField.setEditable(false);
         hitsLabel.setText("Hits: 0");
@@ -71,15 +110,15 @@ public class GameController {
         }
     }
 
-
     private void startTimer() {
+        timeLeft = getLevelTime(level);
         timeLabel.setText("Time: " + timeLeft);
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             timeLeft--;
             timeLabel.setText("Time: " + timeLeft);
 
-            if (timeLeft <= 0) {
+            if (timeLeft <= 0 ) {
                 timeline.stop();
                 inputWordTextField.setEditable(false);
                 checkWord();
@@ -91,11 +130,11 @@ public class GameController {
     }
 
     public void setNickname(String nickname) {
-        this.nickname = nickname;
         nicknameLabel.setText("Player: " + nickname);
     }
 
     private void nextWord() {
+        alertsLabel.setText("");
         String next = words.get(random.nextInt(words.size()));
         writeWordLabel.setText(next);
     }
@@ -103,13 +142,22 @@ public class GameController {
     private void checkWord() {
         String typed = inputWordTextField.getText().trim();
         if (typed.equals(writeWordLabel.getText()) && timeLeft >= 0) {
-            hits++;
-            hitsLabel.setText("Hits: " + hits);
+            level++;
+            hitsLabel.setText("Hits: " + level);
             inputWordTextField.clear();
+            startTimer();
             nextWord();
-        } else if (timeLeft <= 0) {
-            writeWordLabel.setText("THE TIME IS OVER");
-            inputWordTextField.setEditable(false);
+        }else{
+            alertsLabel.setStyle("-fx-text-fill: red;");
+            alertsLabel.setText("WRONG WORD");
         }
     }
+    public int getLevelTime(int level) {
+        int time = 20 - 2 * ((level - 1) / 5);
+        if (time < 2) {
+            time = 2; // tiempo mínimo
+        }
+        return time;
+    }
 }
+

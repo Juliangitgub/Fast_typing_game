@@ -67,6 +67,11 @@
             <Insets />
          </opaqueInsets>
       </TextField>
+      <Label fx:id="alertsLabel" disable="true" text="ALERTS" textFill="RED">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
       <Button fx:id="startGameButton" mnemonicParsing="false" onAction="#onActionVerifyButton" onKeyPressed="#onKeyEnterPressed" text="START" />
    </children>
 </VBox>
