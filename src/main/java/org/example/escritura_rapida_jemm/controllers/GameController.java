@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -86,6 +87,9 @@ public class GameController {
         inputWordTextField.setEditable(false);
         hitsLabel.setText("Hits: 0");
         writeWordLabel.setText("Press Start to play");
+        inputWordTextField.setStyle("-fx-border-color: black; -fx-border-width: 3;");
+        alertsLabel.setText("");
+        inputWordTextField.setText("Type here...");
     }
 
     @FXML
@@ -97,7 +101,10 @@ public class GameController {
             inputWordTextField.clear();
             nextWord();
             startTimer();
-        } else {
+        } else if(startGameButton.getText().equals("Restart")) {
+            initialize();
+
+        }else{
             //Then check word
             checkWord();
         }
@@ -112,11 +119,11 @@ public class GameController {
 
     private void startTimer() {
         if (timeline != null) {
-            timeline.stop(); // Detener timeline anterior
+            timeline.stop();
         }
-
         timeLeft = getLevelTime(level);
         timeLabel.setText("Time: " + timeLeft);
+        inputWordTextField.setEditable(true);
 
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             timeLeft--;
@@ -125,12 +132,32 @@ public class GameController {
             if (timeLeft <= 0) {
                 timeline.stop();
                 inputWordTextField.setEditable(false);
-                writeWordLabel.setText("⏱ THE TIME IS OVER!");
+
+
+                boolean correct = inputWordTextField.getText().trim().equals(writeWordLabel.getText());
+                if (!correct) {
+                    alertsLabel.setStyle("-fx-text-fill: red;");
+                    alertsLabel.setText("⏱ TIME IS OVER! WRONG WORD");
+                    inputWordTextField.setStyle("-fx-border-color: red; -fx-border-width: 3;");
+
+                    showSummary();
+                } else {
+                    level++;
+                    hitsLabel.setText("Level: " + level);
+                    alertsLabel.setStyle("-fx-text-fill: green;");
+                    alertsLabel.setText("NEXT LEVEL");
+                    inputWordTextField.setStyle("-fx-border-color: green; -fx-border-width: 3;");
+
+                    inputWordTextField.clear();
+                    nextWord();
+                    startTimer();
+                }
             }
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
+
 
     public void setNickname(String nickname) {
         nicknameLabel.setText("Player: " + nickname);
@@ -149,12 +176,14 @@ public class GameController {
             hitsLabel.setText("level: " + level);
             inputWordTextField.clear();
             alertsLabel.setStyle("-fx-text-fill: green;");
+            inputWordTextField.setStyle("-fx-border-color: green; -fx-border-width: 3;");
             alertsLabel.setText("NEXT LEVEL");
             nextWord();
             startTimer();
         } else {
             alertsLabel.setStyle("-fx-text-fill: red;");
             alertsLabel.setText("WRONG WORD");
+            inputWordTextField.setStyle("-fx-border-color: red; -fx-border-width: 3;");
         }
     }
     public int getLevelTime(int level) {
@@ -164,5 +193,14 @@ public class GameController {
         }
         return time;
     }
+    private void showSummary() {
+        startGameButton.setText("Restart");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Summary");
+        alert.setHeaderText("Your performance summary");
+        alert.setContentText("Level reached: " + level + "\nHits: " + hitsLabel.getText());
+        alert.showAndWait();
+    }
+
 }
 
