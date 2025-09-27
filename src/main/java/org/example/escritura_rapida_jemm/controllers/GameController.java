@@ -137,7 +137,7 @@ public class GameController {
     }
 
     private void nextWord() {
-        alertsLabel.setText("");
+
         String next = words.get(random.nextInt(words.size()));
         writeWordLabel.setText(next);
     }
@@ -148,6 +148,8 @@ public class GameController {
             level++;
             hitsLabel.setText("Hits: " + level);
             inputWordTextField.clear();
+            alertsLabel.setStyle("-fx-text-fill: green;");
+            alertsLabel.setText("NEXT LEVEL");
             nextWord();
             startTimer();
         } else {
