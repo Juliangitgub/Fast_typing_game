@@ -85,7 +85,7 @@ public class GameController {
 
         startGameButton.setText("Start");
         inputWordTextField.setEditable(false);
-        hitsLabel.setText("Hits: 0");
+        hitsLabel.setText("Level: 1");
         writeWordLabel.setText("Press Start to play");
         inputWordTextField.setStyle("-fx-border-color: black; -fx-border-width: 3;");
         alertsLabel.setText("");
@@ -103,7 +103,6 @@ public class GameController {
             startTimer();
         } else if(startGameButton.getText().equals("Restart")) {
             initialize();
-
         }else{
             //Then check word
             checkWord();
@@ -139,7 +138,6 @@ public class GameController {
                     alertsLabel.setStyle("-fx-text-fill: red;");
                     alertsLabel.setText("⏱ TIME IS OVER! WRONG WORD");
                     inputWordTextField.setStyle("-fx-border-color: red; -fx-border-width: 3;");
-
                     showSummary();
                 } else {
                     level++;
@@ -195,12 +193,10 @@ public class GameController {
     }
     private void showSummary() {
         startGameButton.setText("Restart");
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Game Summary");
-        alert.setHeaderText("Your performance summary");
-        alert.setContentText("Level reached: " + level + "\nHits: " + hitsLabel.getText());
-        alert.showAndWait();
+        inputWordTextField.setText("CORRECT WORD: " + writeWordLabel.getText() +
+                " | LEVEL REACHED: " + level);
     }
+
 
 }
 
